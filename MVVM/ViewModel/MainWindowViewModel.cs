@@ -1,23 +1,31 @@
-﻿using ELM327_GUI.Methods;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using ELM327_GUI.Methods;
 using ELM327_GUI.MVVM.View;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
 using System.Windows;
 using System.Windows.Input;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 
 namespace ELM327_GUI.MVVM.ViewModel
 {
     public partial class MainWindowViewModel : ObservableObject
     {
         private SerialPort serialPort;
-        private List<string> response = new List<string>();
+        //private List<string> response = new List<string>();
+
+        [ObservableProperty]
+        private string connectionStatus;
+
+        [ObservableProperty]
+        private ObservableCollection<string> responses = new();
+
 
         public ICommand AutodataCommand { get; }
         public ICommand ATcommandCommand { get; }
@@ -42,6 +50,7 @@ namespace ELM327_GUI.MVVM.ViewModel
             PDFreportgenCommand = new RelayCommand<object>(PDFreportgenExecute);
             CommandsfromfileCommand = new RelayCommand<object>(CommandsfromfileExecute);
             ExitCommand = new RelayCommand<object>(ExitExecute);
+            ConnectPort.StatusUpdated += status => ConnectionStatus = status;
         }
 
         #region Autó adatai
@@ -72,21 +81,21 @@ namespace ELM327_GUI.MVVM.ViewModel
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Hiba történt a port megnyitásakor: {ex.Message}");
+                ConnectionStatus=$"Hiba történt a port megnyitásakor: {ex.Message}";
             }
         }
 
             
         private void HandleATCommand(string command)
         {
-            MessageBox.Show($"Parancs: {command}");
+            ConnectionStatus = $"Parancs: {command}";
             SendATCommand(command);
         }
         private void SendATCommand(string command)
         {
             if (serialPort == null || !serialPort.IsOpen)
             {
-                MessageBox.Show("A port nincs megnyitva!");
+                ConnectionStatus = "A port nincs megnyitva!";
                 return;
             }
 
@@ -94,19 +103,19 @@ namespace ELM327_GUI.MVVM.ViewModel
             {
                 serialPort.WriteLine(command);
                 string resp = serialPort.ReadLine();
-                MessageBox.Show($"Válasz: {resp}");
-                response.Add(resp);
+                ConnectionStatus = $"Válasz: {resp}";
+                Responses.Add(resp);
 
                 string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "response.txt");
                 File.AppendAllText(filePath, $"Parancs: {command}{Environment.NewLine}Válasz: {Environment.NewLine}{resp}{Environment.NewLine}");
             }
             catch (TimeoutException)
             {
-                MessageBox.Show("Nincs válasz az ELM327 eszköztől (időtúllépés).");
+                ConnectionStatus = "Nincs válasz az ELM327 eszköztől (időtúllépés).";
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Hiba az AT parancs küldésekor: {ex.Message}");
+                ConnectionStatus = $"Hiba az AT parancs küldésekor: {ex.Message}";
             }
         }
         #endregion
@@ -131,14 +140,14 @@ namespace ELM327_GUI.MVVM.ViewModel
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Hiba történt a port megnyitásakor: {ex.Message}");
+                ConnectionStatus = $"Hiba történt a port megnyitásakor: {ex.Message}";
             }
 
            
         }
         private void HandlePIDCommand(string command)
         {
-            MessageBox.Show($"Parancs: {command}");
+            ConnectionStatus = $"Parancs: {command}";
             SendATCommand(command);
         }
         #endregion
@@ -153,10 +162,10 @@ namespace ELM327_GUI.MVVM.ViewModel
             if (serialPort == null)
                 return;
 
-            MessageBox.Show("UDS kompatibilitás ellenőrzés");
+            ConnectionStatus = "UDS kompatibilitás ellenőrzés";
             try
             {
-                serialPort.WriteLine("AT Z");       // Reset az ELM327-nek
+                serialPort.WriteLine("AT Z");
                 System.Threading.Thread.Sleep(1000);
 
                 serialPort.WriteLine("AT SP 6");    // Protokoll beállítás ISO 15765-4 (CAN 11 bit) - mely UDS támogatására is alkalmas
@@ -167,25 +176,25 @@ namespace ELM327_GUI.MVVM.ViewModel
 
                 System.Threading.Thread.Sleep(500);
 
-                // Válasz olvasása
                 string response = serialPort.ReadExisting();
                 string hexString = response.Replace("-", " ");
 
                 // Ellenőrzés, hogy kaptunk-e pozitív választ (pl. 50 01)
                 if (response.Contains("50 01"))
                 {
-                    MessageBox.Show("Az autó támogatja az UDS protokollt és elfogadta a Start Session parancsot.");
+                    ConnectionStatus = "Az autó támogatja az UDS protokollt és elfogadta a Start Session parancsot.";
+                    
                 }
                 else
                 {
-                    MessageBox.Show($"Válasz érkezett, de nem az elvárt UDS Start Session: {response}");
-                    MessageBox.Show($"Válasz: {hexString}");
+                    ConnectionStatus = $"Válasz érkezett, de nem az elvárt UDS Start Session: {response}";
+                    ConnectionStatus = $"Válasz: {hexString}";
                 }
              
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Hiba történt a port megnyitásakor: {ex.Message}");
+                ConnectionStatus = $"Hiba történt a port megnyitásakor: {ex.Message}";
             }
         }
         #endregion
@@ -262,6 +271,21 @@ namespace ELM327_GUI.MVVM.ViewModel
         }
         #endregion
         #region Parancsok fájlból
+
+        private string SelectCommandsFile()
+        {
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            openFileDialog.Filter = "Szöveg fájlok (*.txt)|*.txt|Minden fájl (*.*)|*.*";
+            openFileDialog.Title = "Parancsfájl megnyitása";
+
+            bool? result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                return openFileDialog.FileName;
+            }
+            return null;
+        }
+
         private void CommandsfromfileExecute(object obj)
         {
             if (serialPort != null && serialPort.IsOpen)
@@ -271,14 +295,21 @@ namespace ELM327_GUI.MVVM.ViewModel
             if (serialPort == null)
                 return;
 
+            string commandsFilePath = SelectCommandsFile();
+            if (string.IsNullOrEmpty(commandsFilePath))
+            {
+                ConnectionStatus = "Nincs parancsfájl kiválasztva.";
+                return;
+            }
+
             try
             {
                 string[] commands = File.ReadAllLines("ELM327_ATCommands.txt");
-
+                
 
                 if (serialPort == null || !serialPort.IsOpen)
                 {
-                    MessageBox.Show("A soros port nincs megnyitva.");
+                    ConnectionStatus = "A soros port nincs megnyitva.";
                     return;
                 }
 
@@ -300,14 +331,14 @@ namespace ELM327_GUI.MVVM.ViewModel
                     responseWriter.WriteLine(response);
                     responseWriter.WriteLine();
 
-                    MessageBox.Show($"Parancs: {command}\nVálasz: {response}");
+                    ConnectionStatus = $"Parancs: {command}\nVálasz: {response}";
                 }
 
-                MessageBox.Show("Parancsok elküldve, válaszok mentve a Response.txt fájlba.");
+                ConnectionStatus = "Parancsok elküldve, válaszok mentve a Response.txt fájlba.";
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Hiba történt: {ex.Message}");
+                ConnectionStatus = $"Hiba történt: {ex.Message}";
             }
         }
         #endregion

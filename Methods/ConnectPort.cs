@@ -8,6 +8,7 @@ namespace ELM327_GUI.Methods
 {
     public static class ConnectPort
     {
+        public static event Action<string> StatusUpdated;
         public static SerialPort OpenPort(Window owner = null)
         {
             var selectorWindow = new PortSelectorWindow();
@@ -19,7 +20,7 @@ namespace ELM327_GUI.Methods
 
             if (result != true || selectorWindow.SelectedPort == null)
             {
-                MessageBox.Show("Nem választottál portot.");
+                StatusUpdated?.Invoke("Nem választottál portot.");
                 return null;
             }
 
@@ -73,12 +74,12 @@ namespace ELM327_GUI.Methods
                     NewLine = newLine
                 };
                 serialPort.Open();
-                MessageBox.Show($"A port {portName} megnyitva.");
+                StatusUpdated?.Invoke($"A port {portName} megnyitva.");
                 return serialPort;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Hiba történt a port megnyitásakor: {ex.Message}");
+                StatusUpdated?.Invoke($"Hiba történt a port megnyitásakor: {ex.Message}");
                 return null;
             }
         }

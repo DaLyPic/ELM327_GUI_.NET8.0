@@ -37,12 +37,32 @@ namespace ELM327_GUI.MVVM.ViewModel
             ParsingCommand = new RelayCommand<object>(ParsingExecute);
         }
 
+        private string SelectDbcFile()
+        {
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            openFileDialog.Filter = "DBC fájlok (*.dbc)|*.dbc|Minden fájl (*.*)|*.*";
+            openFileDialog.Title = "DBC fájl megnyitása";
+
+            bool? result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                return openFileDialog.FileName;
+            }
+            return null;
+        }
+
         private void ParsingExecute(object obj)
         {
-            MessageBox.Show("ParsingExecute called");
             try
             {
-                string filePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files", "11-bit-OBD2-v4.0.dbc");
+                //string filePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files", "11-bit-OBD2-v4.0.dbc");
+                string filePath = SelectDbcFile();
+                if (string.IsNullOrEmpty(filePath))
+                {
+                    // A felhasználó nem választott fájlt vagy megszakította
+                    MessageBox.Show($"Nem választottál DBC fájlt.", "Figyelmeztetés", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
                 var parsed = DbcParser.Parse(filePath);
                 Messages = new ObservableCollection<DbcMessage>(parsed);
