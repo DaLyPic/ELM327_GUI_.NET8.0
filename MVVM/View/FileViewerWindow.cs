@@ -9,10 +9,10 @@ namespace ELM327_GUI.MVVM.View
     {
         public FileViewerWindow(string filePath)
         {
-            Title = "PID parancsok";
+            Title = "FileViewerWindow";
             Width = 600;
             Height = 400;
-            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
             var scrollViewer = new ScrollViewer
             {

@@ -13,13 +13,17 @@ namespace ELM327_GUI.MVVM.ViewModel
         public ObservableCollection<string> Ports { get; } = new ObservableCollection<string>();
         private bool userPortSet = false;
 
-
+        //[ObservableProperty]
+        //private bool userPortSet = false;
 
         public bool UserPortSet
         {
             get => userPortSet;
             set => SetProperty(ref userPortSet, value);
         }
+
+        //[ObservableProperty]
+        //private string portName = "COM1";
 
         private string portName = "COM1";
         public string PortName

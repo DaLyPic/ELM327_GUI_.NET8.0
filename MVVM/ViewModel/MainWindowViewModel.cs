@@ -222,9 +222,11 @@ namespace ELM327_GUI.MVVM.ViewModel
         private void PortsettingExecute(object obj)
         {
             var window = new PortSettingsWindow();
-            var wm = new PortSettingsViewModel();
-            window.DataContext = wm;
-            wm.RequestClose += () => window.Close();
+            window.Owner = Application.Current.MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            //var wm = new PortSettingsViewModel();
+            //window.DataContext = wm;
+            //wm.RequestClose += () => window.Close();
             window.ShowDialog();
 
         }
