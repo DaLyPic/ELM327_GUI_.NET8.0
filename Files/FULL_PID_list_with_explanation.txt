@@ -1,3 +1,16 @@
+Mode (hex)	Description
+1		Show current data
+2		Show freeze frame data
+3		Show stored Diagnostic Trouble Codes
+4		Clear Diagnostic Trouble Codes and stored values
+5		Test results, oxygen sensor monitoring (non CAN only)
+6		Test results, other component/system monitoring (Test results, oxygen sensor monitoring for CAN only)
+7		Show pending Diagnostic Trouble Codes (detected during current or last driving cycle)
+8		Control operation of on-board component/system
+9		Request vehicle information
+0A		Permanent Diagnostic Trouble Codes (DTCs) (Cleared DTCs)
+
+
 PID	Description
 00	PID support status for PIDs $01-$20 Details
 01	Monitor status since DTCs cleared Details

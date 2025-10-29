@@ -13,14 +13,23 @@
     <None Remove="Files\ELM327_ATCommands.txt" />
     <None Remove="Files\FULL_PID_list_with_explanation.txt" />
     <None Remove="Files\HowToUse.pdf" />
+    <None Remove="Files\VIN_number_explained.pdf" />
     <None Remove="Fonts\Gruppo-Regular.ttf" />
     <None Remove="Fonts\Poppins-Medium.ttf" />
     <None Remove="Fonts\Poppins-Thin.ttf" />
-    <None Remove="Images\ELM327_GUI.png" />
+    <None Remove="Images\ELM327_ikon.png" />
+    <None Remove="Images\Engine_Check_Lamp.jpg" />
+    <None Remove="Images\pngwing.com.png" />
+    <None Remove="Images\pngwing.com0.png" />
+    <None Remove="Images\pngwing.com1.png" />
+    <None Remove="Images\pngwing.com2.png" />
+    <None Remove="Images\sigmund_TnEe6BdBC2M_unsplash.jpg" />
+    <None Remove="Images\StockSnap_LOGRWCLQSP.jpg" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
     <PackageReference Include="PDFsharp" Version="6.2.2" />
     <PackageReference Include="System.IO.Ports" Version="9.0.10" />
   </ItemGroup>
@@ -35,13 +44,25 @@
     <Content Include="Files\ELM327_ATCommands.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Files\VIN_number_explained.pdf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Fonts\Gruppo-Regular.ttf" />
     <Resource Include="Fonts\Poppins-Medium.ttf" />
     <Resource Include="Fonts\Poppins-Thin.ttf" />
+    <Resource Include="Images\pngwing.com.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\pngwing.com0.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\pngwing.com1.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\pngwing.com2.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Content Include="Files\FULL_PID_list_with_explanation.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\ELM327_GUI.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

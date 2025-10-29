@@ -7,6 +7,7 @@ using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
@@ -26,11 +27,9 @@ namespace ELM327_GUI.MVVM.ViewModel
         [ObservableProperty]
         private ObservableCollection<string> responses = new();
 
-
-        public ICommand AutodataCommand { get; }
+        public IRelayCommand OpenVINDecodeWindowCommand { get; }
         public ICommand ATcommandCommand { get; }
         public ICommand PIDcommandCommand { get; }
-        //public ICommand ParsingCommand { get; }
         public ICommand UdsCommand { get; }
         public ICommand HowtouseCommand { get; }
         public ICommand PortsettingCommand { get; }
@@ -40,10 +39,9 @@ namespace ELM327_GUI.MVVM.ViewModel
 
         public MainWindowViewModel()
         {
-            AutodataCommand = new RelayCommand<object>(AutodataExecute);
+            OpenVINDecodeWindowCommand = new RelayCommand(OpenVINDecoderWindow);
             ATcommandCommand = new RelayCommand<object>(ATcommandExecute);
             PIDcommandCommand = new RelayCommand<object>(PIDcommandExecute);
-            //ParsingCommand = new RelayCommand<object>(ParsingExecute);
             UdsCommand = new RelayCommand<object>(UdsExecute);
             HowtouseCommand = new RelayCommand<object>(HowtouseExecute);
             PortsettingCommand = new RelayCommand<object>(PortsettingExecute);
@@ -54,10 +52,13 @@ namespace ELM327_GUI.MVVM.ViewModel
         }
 
         #region Autó adatai
-        private void AutodataExecute(object obj)
+        private void OpenVINDecoderWindow()
         {
-            var dialog = new InputDialog("Enter data:", "Autó adatai", "");
-            dialog.ShowDialog();
+            var window = new VINDecodeWindow();
+            var vm = new VINDecodeWindowViewModel();
+            window.DataContext = vm;
+            window.Owner = Application.Current.MainWindow;
+            window.ShowDialog();
         }
         #endregion
         #region AT parancsok
@@ -102,12 +103,29 @@ namespace ELM327_GUI.MVVM.ViewModel
             try
             {
                 serialPort.WriteLine(command);
+                System.Threading.Thread.Sleep(200);
+                //string response = serialPort.ReadExisting();
                 string resp = serialPort.ReadLine();
                 ConnectionStatus = $"Válasz: {resp}";
                 Responses.Add(resp);
 
                 string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "response.txt");
                 File.AppendAllText(filePath, $"Parancs: {command}{Environment.NewLine}Válasz: {Environment.NewLine}{resp}{Environment.NewLine}");
+                //using (StreamWriter responseWriter = new StreamWriter("response.txt", append: true))
+                //{
+                //    //System.Threading.Thread.Sleep(200);
+
+                //    //string response = serialPort.ReadExisting();
+                //    //Responses.Add(response); //PRÓBA!
+
+                //    responseWriter.WriteLine($"Időbélyegző: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+                //    responseWriter.WriteLine($"=== Parancs: {command} ===");
+                //    responseWriter.WriteLine($"=== Válasz:");
+                //    responseWriter.WriteLine(response);
+                //    responseWriter.WriteLine();
+
+                //    ConnectionStatus = $"Parancs: {command}\nVálasz: {response}";
+                //}
             }
             catch (TimeoutException)
             {
@@ -148,10 +166,56 @@ namespace ELM327_GUI.MVVM.ViewModel
         private void HandlePIDCommand(string command)
         {
             ConnectionStatus = $"Parancs: {command}";
-            SendATCommand(command);
+            SendPIDCommand(command);
+        }
+        private void SendPIDCommand(string command)
+        {
+            if (serialPort == null || !serialPort.IsOpen)
+            {
+                ConnectionStatus = "A port nincs megnyitva!";
+                return;
+            }
+
+            try
+            {
+                serialPort.WriteLine(command);
+                System.Threading.Thread.Sleep(200);
+                //string response = serialPort.ReadExisting();
+                string resp = serialPort.ReadExisting();
+                ConnectionStatus = $"Válasz: {resp}";
+                Responses.Add(resp);
+
+                string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "response.txt");
+                File.AppendAllText(filePath, $"Parancs: {command}{Environment.NewLine}Válasz: {Environment.NewLine}{resp}{Environment.NewLine}");
+
+                //using (StreamWriter responseWriter = new StreamWriter("response.txt", append: true))
+                //{
+                //    //System.Threading.Thread.Sleep(200);
+
+                //    //string response = serialPort.ReadExisting();
+                //    //Responses.Add(response); //PRÓBA!
+
+                //    responseWriter.WriteLine($"Időbélyegző: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+                //    responseWriter.WriteLine($"=== Parancs: {command} ===");
+                //    responseWriter.WriteLine($"=== Válasz:");
+                //    responseWriter.WriteLine(response);
+                //    responseWriter.WriteLine();
+
+                //    ConnectionStatus = $"Parancs: {command}\nVálasz: {response}";
+                //}
+
+            }
+            catch (TimeoutException)
+            {
+                ConnectionStatus = "Nincs válasz az ELM327 eszköztől (időtúllépés).";
+            }
+            catch (Exception ex)
+            {
+                ConnectionStatus = $"Hiba az AT parancs küldésekor: {ex.Message}";
+            }
         }
         #endregion
-     
+
         #region UDS kompatibilitás
         private void UdsExecute(object obj)
         {
@@ -182,7 +246,7 @@ namespace ELM327_GUI.MVVM.ViewModel
                 // Ellenőrzés, hogy kaptunk-e pozitív választ (pl. 50 01)
                 if (response.Contains("50 01"))
                 {
-                    ConnectionStatus = "Az autó támogatja az UDS protokollt és elfogadta a Start Session parancsot.";
+                    ConnectionStatus = $"Válasz: {hexString} Az autó támogatja az UDS protokollt és elfogadta a Start Session parancsot.";
                     
                 }
                 else
@@ -315,7 +379,7 @@ namespace ELM327_GUI.MVVM.ViewModel
                     return;
                 }
 
-                using (StreamWriter responseWriter = new StreamWriter("Response.txt", append: false))
+                using (StreamWriter responseWriter = new StreamWriter("Response.txt", append: true))
 
                     foreach (string command in commands)
                 {
@@ -330,6 +394,7 @@ namespace ELM327_GUI.MVVM.ViewModel
 
                     responseWriter.WriteLine($"Időbélyegző: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
                     responseWriter.WriteLine($"=== Parancs: {command} ===");
+                    responseWriter.WriteLine($"=== Válasz:");
                     responseWriter.WriteLine(response);
                     responseWriter.WriteLine();
 

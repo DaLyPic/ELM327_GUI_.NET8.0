@@ -9,6 +9,7 @@ namespace ELM327_GUI.MVVM.ViewModel
         public PIDCommandWindowViewModel PIDCommandVM { get; }
         public ATCommandWindowViewModel ATCommandVM { get; }
         public PortSettingsViewModel PortSettingsVM { get; }
+        public VINDecodeWindowViewModel VINDecodeVM { get; }
 
         public MainViewModel()
         {
@@ -17,6 +18,7 @@ namespace ELM327_GUI.MVVM.ViewModel
             PIDCommandVM = new PIDCommandWindowViewModel();
             ATCommandVM = new ATCommandWindowViewModel();
             PortSettingsVM = new PortSettingsViewModel();
+            VINDecodeVM = new VINDecodeWindowViewModel();
         }
     }
 }

@@ -9,7 +9,8 @@
         WindowStyle="None"
         ResizeMode="NoResize"
         Background="Transparent"
-        AllowsTransparency="True">
+        AllowsTransparency="True"
+	    WindowStartupLocation = "CenterScreen">
 	<Border Background="#272537"
             CornerRadius="20">
 		<Grid x:Name="MainGrid">
@@ -47,7 +48,7 @@
 
 
 
-			<TextBlock  Text="Verzió: 2.2.0&#x0a;Józsi Csaba"
+			<TextBlock  Text="Verzió: 3.0.0&#x0a;Józsi Csaba"
                         Grid.Row="0" Grid.Column="2"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"
@@ -105,12 +106,12 @@
                         VerticalAlignment="Top"
                         HorizontalAlignment="Center">
 
-				<Button x:Name="autodataButton"
-                        Content="Autó adatai"
+				<Button x:Name="VINDecodeButton"
+                        Content="VIN dekódolás"
                         Width="160"
                         Height="40"
                         Margin="0,10,0,10"
-                        Command="{Binding MainVM.AutodataCommand}"/>
+                        Command="{Binding MainVM.OpenVINDecodeWindowCommand}"/>
 
 				<Button x:Name="portSettingButton"
                         Content="Port beállítás"
@@ -144,16 +145,31 @@
 
 			<Grid Grid.Row="1" Grid.Column="1">
 				<Grid.Background>
-					<ImageBrush ImageSource="Images/ELM327_GUI.png" Stretch="UniformToFill"/>
+					<ImageBrush ImageSource="Images/pngwing.com0.png" Stretch="UniformToFill"/>
 				</Grid.Background>
 
 			</Grid>
-			<Border Grid.Row="2" Grid.Column="1" Background="#3a3350">
+			
+			<Grid Grid.Row="2" Grid.Column="0">
+				<Grid.Background>
+					<ImageBrush ImageSource="Images/pngwing.com2.png" Stretch="Uniform"/>
+				</Grid.Background>
+
+			</Grid>
+
+			<Grid Grid.Row="2" Grid.Column="2">
+				<Grid.Background>
+					<ImageBrush ImageSource="Images/pngwing.com1.png" Stretch="Uniform"/>
+				</Grid.Background>
+
+			</Grid>
+			
+			<Border Grid.Row="2" Grid.Column="1" Background="#272537">
 			</Border>
 			<!-- Center panel: status and responses -->
 			<StackPanel Grid.Row="2" Grid.Column="1" Margin="10">
 				<TextBlock Text="{Binding MainVM.ConnectionStatus}" Foreground="White" FontWeight="Bold" Margin="0,0,0,10"/>
-				<ListBox ItemsSource="{Binding MainVM.Responses}" Height="150" Foreground="White" Background="#3a3350"/>
+				<!--<ListBox ItemsSource="{Binding MainVM.Responses}" Height="150" Foreground="White" Background="#272537"/>-->
 			</StackPanel>
 
 
