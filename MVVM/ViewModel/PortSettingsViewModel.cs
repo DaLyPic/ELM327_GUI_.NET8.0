@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ELM327_GUI.MVVM.Model;
-using System;
 using System.Collections.ObjectModel;
 using System.IO.Ports;
 using System.Windows;

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -83,7 +81,6 @@ namespace ELM327_GUI.MVVM.Model
                     Console.WriteLine("Nem illeszkedő SG_ sor: " + line);
                 }
             }
-
             return messages;
         }
     }

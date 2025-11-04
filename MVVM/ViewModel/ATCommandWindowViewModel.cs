@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using System;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -34,6 +33,7 @@ namespace ELM327_GUI.MVVM.ViewModel
             if (string.Equals(command, "exit", StringComparison.OrdinalIgnoreCase))
             {
                 RequestClose?.Invoke();
+                //MessageBox.Show("AT parancs ablak bezárva az 'exit' parancs miatt.", "Információ", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 

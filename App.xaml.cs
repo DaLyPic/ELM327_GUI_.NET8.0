@@ -26,17 +26,5 @@ namespace ELM327_GUI
             Application.Current.MainWindow = mainWindow;
             mainWindow.Show();
         }
-
-        //{
-        //    base.OnStartup(e);
-        //    GlobalFontSettings.FontResolver = new CustomFontResolver();
-
-        //    SplashScreenWindow splash = new SplashScreenWindow();
-        //    splash.Show();
-
-        //    MainWindow mainWindow = new MainWindow();
-        //    Application.Current.MainWindow = mainWindow;
-        //    mainWindow.Show();
-        //}
     }
 }

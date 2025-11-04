@@ -1,15 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ELM327_GUI.MVVM.View;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using System.IO;
 
 namespace ELM327_GUI.MVVM.ViewModel
 {
@@ -93,7 +89,8 @@ namespace ELM327_GUI.MVVM.ViewModel
         {
             try
             {
-                var pdfPath = @"E:\Git\source\repo\ELM327_GUI\Files\VIN_number_explained.pdf";
+                var pdfPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files", "VIN_number_explained.pdf");
+                //var pdfPath = @"E:\Git\source\repo\ELM327_GUI\Files\VIN_number_explained.pdf";
                 Process.Start(new ProcessStartInfo(pdfPath) { UseShellExecute = true });
             }
             catch (Exception ex)

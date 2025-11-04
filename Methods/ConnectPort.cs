@@ -9,7 +9,7 @@ namespace ELM327_GUI.Methods
     public static class ConnectPort
     {
         public static event Action<string> StatusUpdated;
-        public static SerialPort OpenPort(Window owner = null)
+        public static SerialPort? OpenPort(Window owner = null)
         {
             var selectorWindow = new PortSelectorWindow();
             if (owner != null)

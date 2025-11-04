@@ -1,6 +1,4 @@
-﻿using ELM327_GUI.MVVM.ViewModel;
-
-namespace ELM327_GUI.MVVM.ViewModel
+﻿namespace ELM327_GUI.MVVM.ViewModel
 {
     public class MainViewModel
     {

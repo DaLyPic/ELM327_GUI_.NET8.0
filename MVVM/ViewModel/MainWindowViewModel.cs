@@ -4,10 +4,7 @@ using ELM327_GUI.Methods;
 using ELM327_GUI.MVVM.View;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
@@ -19,7 +16,6 @@ namespace ELM327_GUI.MVVM.ViewModel
     public partial class MainWindowViewModel : ObservableObject
     {
         private SerialPort serialPort;
-        //private List<string> response = new List<string>();
 
         [ObservableProperty]
         private string connectionStatus;

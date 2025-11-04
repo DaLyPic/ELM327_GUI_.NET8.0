@@ -1,5 +1,4 @@
 ﻿using ELM327_GUI.MVVM.ViewModel;
-using System;
 using System.Windows;
 
 

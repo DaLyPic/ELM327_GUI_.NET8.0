@@ -1,6 +1,5 @@
 ﻿using System.IO.Ports;
 using System.Windows;
-using ELM327_GUI.MVVM.ViewModel;
 
 namespace ELM327_GUI.MVVM.View
 {
