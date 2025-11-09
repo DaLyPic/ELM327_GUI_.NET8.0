@@ -12,7 +12,7 @@ namespace ELM327_GUI
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new MainViewModel(); // Az új aggregátor ViewModel
+            //this.DataContext = new MainViewModel(); // Az új aggregátor ViewModel
 
             CultureInfo magyarKultura = new CultureInfo("hu-HU");
 
@@ -38,14 +38,5 @@ namespace ELM327_GUI
                 return new FontResolverInfo("Poppins-Thin");
             }
         }
-        //private FrameworkElement GetGridCell(Grid grid, int row, int column)
-        //{
-        //    foreach (UIElement element in grid.Children)
-        //    {
-        //        if (Grid.GetRow(element) == row && Grid.GetColumn(element) == column)
-        //            return element as FrameworkElement;
-        //    }
-        //    return null;
-        //}
     }
 }
