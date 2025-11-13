@@ -39,12 +39,12 @@
     <Content Include="Files\11-bit-OBD2-v4.0.dbc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Files\HowToUse.pdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Files\ELM327_ATCommands.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Files\HowToUse.pdf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Files\VIN_number_explained.pdf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

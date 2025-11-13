@@ -16,8 +16,8 @@ namespace ELM327_GUI.MVVM.ViewModel
             set => SetProperty(ref _commandText, value);
         }
 
-        public ICommand SendCommand { get; }
-        public ICommand ShowListCommand { get; }
+        public IRelayCommand SendCommand { get; }
+        public IRelayCommand ShowListCommand { get; }
 
         public event Action<string> CommandEntered;
         public event Action RequestClose;

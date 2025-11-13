@@ -24,7 +24,7 @@
 			<Grid.RowDefinitions>
 				<RowDefinition Height="100"/>
 				<RowDefinition Height="*"/>
-				<RowDefinition Height="220"/>
+				<RowDefinition Height="210"/>
 			</Grid.RowDefinitions>
 
 			<TextBlock  x:Name="dateTextBlock"
@@ -48,7 +48,7 @@
 
 
 
-			<TextBlock  Text="Verzió: 4.0.0&#x0a;Józsi Csaba"
+			<TextBlock  Text="Verzió: 4.0.1&#x0a;Józsi Csaba"
                         Grid.Row="0" Grid.Column="2"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"

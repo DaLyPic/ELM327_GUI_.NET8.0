@@ -28,7 +28,7 @@ namespace ELM327_GUI.Methods
 
             try
             {
-                string portName;
+                string? portName;
                 int baudRate;
                 int dataBits;
                 Parity parity;
