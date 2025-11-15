@@ -9,12 +9,14 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
 using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ELM327_GUI.MVVM.ViewModel
 {
     public partial class MainWindowViewModel : ObservableObject
     {
         private SerialPort serialPort;
+        private readonly IServiceProvider _serviceProvider;
 
         [ObservableProperty]
         private string connectionStatus;
@@ -25,8 +27,8 @@ namespace ELM327_GUI.MVVM.ViewModel
         [RelayCommand]
         private void OpenVINDecodeWindow()
         {
-            var window = new VINDecodeWindow();
-            var vm = new VINDecodeWindowViewModel();
+            var window = _serviceProvider.GetRequiredService<VINDecodeWindow>();
+            var vm = _serviceProvider.GetRequiredService<VINDecodeWindowViewModel>();
             window.DataContext = vm;
             window.Owner = Application.Current.MainWindow;
             window.ShowDialog();
@@ -44,11 +46,12 @@ namespace ELM327_GUI.MVVM.ViewModel
 
             try
             {
-                var commandWindow = new ATCommandWindow(HandleATCommand)
-                {
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                    Owner = Application.Current.MainWindow
-                };
+                var commandWindow = _serviceProvider.GetRequiredService<ATCommandWindow>();
+                commandWindow.SetCommandHandler(HandleATCommand);
+
+                commandWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                commandWindow.Owner = Application.Current.MainWindow;
+
                 commandWindow.ShowDialog();
             }
             catch (Exception ex)
@@ -57,6 +60,7 @@ namespace ELM327_GUI.MVVM.ViewModel
             }
         }
 
+        //new PIDCommandWindow(HandlePIDCommand)
         [RelayCommand]
         private void PIDcommand(object obj)
         {
@@ -68,11 +72,11 @@ namespace ELM327_GUI.MVVM.ViewModel
                 return;
             try
             {
-                var commandWindow = new PIDCommandWindow(HandlePIDCommand)
-                {
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                    Owner = Application.Current.MainWindow
-                };
+                var commandWindow = _serviceProvider.GetRequiredService<PIDCommandWindow>();
+                commandWindow.SetCommandHandler(HandlePIDCommand);
+                commandWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                commandWindow.Owner = Application.Current.MainWindow;
+                
                 commandWindow.ShowDialog();
 
             }
@@ -151,12 +155,12 @@ namespace ELM327_GUI.MVVM.ViewModel
         [RelayCommand]
         private void Portsetting(object obj)
         {
-            var window = new PortSettingsWindow();
+            var window = _serviceProvider.GetRequiredService<PortSettingsWindow>();
             window.Owner = Application.Current.MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            //var wm = new PortSettingsViewModel();
-            //window.DataContext = wm;
-            //wm.RequestClose += () => window.Close();
+            var wm = _serviceProvider.GetRequiredService<PortSettingsViewModel>();
+            window.DataContext = wm;
+            wm.RequestClose += () => window.Close();
             window.ShowDialog();
 
         }
@@ -277,7 +281,7 @@ namespace ELM327_GUI.MVVM.ViewModel
         //public IRelayCommand CommandsfromfileCommand { get; }
         //public IRelayCommand ExitCommand { get; }
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(IServiceProvider serviceProvider)
         {
             //OpenVINDecodeWindowCommand = new RelayCommand(OpenVINDecoderWindow);
             //ATcommandCommand = new RelayCommand<object>(ATcommandExecute);
@@ -289,6 +293,7 @@ namespace ELM327_GUI.MVVM.ViewModel
             //CommandsfromfileCommand = new RelayCommand<object>(CommandsfromfileExecute);
             //ExitCommand = new RelayCommand<object>(ExitExecute);
             ConnectPort.StatusUpdated += status => ConnectionStatus = status;
+            _serviceProvider = serviceProvider;
         }
 
         #region VIN dekódolás

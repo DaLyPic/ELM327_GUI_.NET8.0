@@ -16,8 +16,7 @@ namespace ELM327_GUI
         {
             base.OnStartup(e);
             GlobalFontSettings.FontResolver = new CustomFontResolver();
-            //OnStartupAsync(e);
-
+            
             var services = new ServiceCollection();
 
             services.AddSingleton<DbcParserViewModel>();
@@ -30,6 +29,12 @@ namespace ELM327_GUI
 
             services.AddSingleton<MainWindow>();
 
+            services.AddTransient<ATCommandWindow>();
+            services.AddTransient<PIDCommandWindow>();
+            services.AddTransient<VINDecodeWindow>();
+            services.AddTransient<VINResultWindow>();
+            services.AddTransient<PortSettingsWindow>();
+            services.AddTransient<SplashScreenWindow>();
 
             _serviceProvider = services.BuildServiceProvider();
 
@@ -38,10 +43,10 @@ namespace ELM327_GUI
             mainWindow.DataContext = mainViewModel;
             mainWindow.Show();
 
-            var splash = new SplashScreenWindow();
+            var splash = _serviceProvider.GetRequiredService<SplashScreenWindow>();
             splash.Show();
 
-            Task.Delay(8000).ContinueWith(t =>
+            Task.Delay(9000).ContinueWith(t =>
             {
                 splash.Dispatcher.Invoke(() =>
                 {
@@ -54,20 +59,24 @@ namespace ELM327_GUI
             });
 
         }
-        //private async void OnStartupAsync(StartupEventArgs e)
-        //{
-        //    SplashScreenWindow splash = new SplashScreenWindow();
-        //    splash.Show();
-
-        //    await Task.Delay(7000); // várakozás a splash animációra
-
-        //    splash.Close();
-
-        //    MainWindow mainWindow = new MainWindow();
-        //    Application.Current.MainWindow = mainWindow;
-        //    mainWindow.Show();
-        //    await Task.Delay(5000);
-        //    mainWindow.Close();
-        //}
     }
 }
+
+//OnStartupAsync(e);
+
+//private async void OnStartupAsync(StartupEventArgs e)
+//{
+//    SplashScreenWindow splash = new SplashScreenWindow();
+//    splash.Show();
+
+//    await Task.Delay(7000); // várakozás a splash animációra
+
+//    splash.Close();
+
+//    MainWindow mainWindow = new MainWindow();
+//    Application.Current.MainWindow = mainWindow;
+//    mainWindow.Show();
+//    await Task.Delay(5000);
+//    mainWindow.Close();
+//}
+

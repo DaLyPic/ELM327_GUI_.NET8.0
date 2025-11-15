@@ -63,7 +63,8 @@ namespace ELM327_GUI.MVVM.ViewModel
                             if (vinTable.Rows.Count > 0)
                             {
                                 //string result = vinTable.Rows[0][0].ToString();
-                                VINResultWindow resultWindow = new VINResultWindow(vinTable);
+                                VINResultWindow resultWindow = new VINResultWindow(vinTable); //Ezt még meg kell oldani IoC-vel!!!
+                                resultWindow.Owner = Application.Current.Windows.OfType<VINDecodeWindow>().FirstOrDefault();
                                 resultWindow.ShowDialog();
                                 //MessageBox.Show($"VIN dekódolás eredménye: {result}", "Eredmény");
                             }

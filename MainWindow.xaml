@@ -48,7 +48,7 @@
 
 
 
-			<TextBlock  Text="Verzió: 4.0.1&#x0a;Józsi Csaba"
+			<TextBlock  Text="Verzió: 4.3.4&#x0a;Józsi Csaba"
                         Grid.Row="0" Grid.Column="2"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"

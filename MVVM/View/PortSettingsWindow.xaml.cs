@@ -9,9 +9,9 @@ namespace ELM327_GUI.MVVM.View
         {
             InitializeComponent();
 
-            var wm = new PortSettingsViewModel();
-            this.DataContext = wm;
-            wm.RequestClose += () => this.Close();
+            //var wm = new PortSettingsViewModel();
+            //this.DataContext = wm;
+            //wm.RequestClose += () => this.Close();
         }
     }
 }
