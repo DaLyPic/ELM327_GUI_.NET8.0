@@ -270,7 +270,7 @@ namespace ELM327_GUI.MVVM.ViewModel
             Application.Current.Dispatcher.Invoke(() =>
             Application.Current.Shutdown());
         }
-
+        
         //public IRelayCommand OpenVINDecodeWindowCommand { get; }
         //public IRelayCommand ATcommandCommand { get; }
         //public IRelayCommand PIDcommandCommand { get; }
@@ -421,6 +421,7 @@ namespace ELM327_GUI.MVVM.ViewModel
                 System.Threading.Thread.Sleep(1000);
                 //string response = serialPort.ReadExisting();
                 string response = serialPort.ReadExisting();
+                /////string responseASCII = System.Text.Encoding.ASCII.GetString(System.Text.Encoding.Default.GetBytes(response));
                 ConnectionStatus = $"Válasz: {response}";
                 //ConnectionStatus = $"Parancs: {command}\nVálasz: {response}";
                 Responses.Add(response);
